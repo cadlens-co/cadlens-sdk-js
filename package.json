@@ -1,0 +1,49 @@
+{
+  "name": "cadlens",
+  "version": "0.1.0",
+  "description": "Official JavaScript/TypeScript SDK for the Cadlens CAD parsing API — DWG, DXF, and DWF to JSON and PNG previews.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "cad",
+    "dwg",
+    "dxf",
+    "cad-parser",
+    "cad-api",
+    "dwg-parser",
+    "sdk",
+    "engineering-api",
+    "aec",
+    "construction-tech",
+    "cadlens"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cadlens-co/cadlens-sdk-js"
+  },
+  "homepage": "https://cadlens.co",
+  "bugs": {
+    "url": "https://github.com/cadlens-co/cadlens-sdk-js/issues"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
