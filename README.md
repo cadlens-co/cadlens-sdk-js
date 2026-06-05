@@ -47,7 +47,7 @@ console.log('Preview:', result.imageUrl);
 import { CadlensClient } from 'cadlens';
 import { readFileSync } from 'fs';
 
-const client = new CadlensClient({ apiKey: 'cad_your_key_here' });
+const client = new CadlensClient({ apiKey: 'cadl_your_key_here' });
 const file = new Blob([readFileSync('drawing.dwg')]);
 
 // 1. Upload
@@ -74,7 +74,7 @@ console.log(result.vectorJson.slice(0, 5));
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `apiKey` | `string` | Your `cad_xxx` API key (required) |
+| `apiKey` | `string` | Your `cadl_xxx` API key (required) |
 | `baseUrl` | `string` | Override API base URL (default: `https://api.cadlens.co`) |
 
 ### Methods
@@ -106,7 +106,7 @@ DWG · DXF · DWF · DWFx · DGN · PDF
 
 ## Get an API Key
 
-Sign up at [cadlens.co](https://cadlens.co), go to the dashboard, and create an API key. Keys start with `cad_`.
+Sign up at [cadlens.co](https://cadlens.co), go to the dashboard, and create an API key. Keys start with `cadl_`.
 
 ---
 
