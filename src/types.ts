@@ -32,15 +32,55 @@ export interface DrawingMetadata {
   width: number;
   height: number;
   createdDate: string | null;
+  layouts?: string[];
+}
+
+export interface BoundingBox {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+  width: number;
+  height: number;
+}
+
+export interface FileInfo {
+  name: string;
+  format: string;
+  version: string;
+  units: string;
+}
+
+export interface ResultSummary {
+  totalSheets: number;
+  totalEntities: number;
+  totalLayers: number;
+  boundingBox?: BoundingBox;
+  truncated: boolean;
+}
+
+export interface Sheet {
+  name: string;
+  index: number;
+  imageUrl: string | null;
+  entityCount: number;
+  layerCount: number;
+  boundingBox: BoundingBox;
+  area: number;
+  perimeter: number;
+  layers: Layer[];
+  entities: VectorEntity[];
 }
 
 export interface JobResult {
   jobId: string;
   status: JobStatus;
-  vectorJson: VectorEntity[];
-  layersJson: Layer[];
+  file?: FileInfo;
+  summary?: ResultSummary;
+  sheets: Sheet[];
   metadata: DrawingMetadata;
-  imageUrl: string | null;
+  imageUrl?: string | null;
+  imageUrls?: string[];
   createdAt: string;
 }
 
@@ -59,6 +99,7 @@ export interface ParseResponse {
 
 export interface ImageResponse {
   imageUrl: string;
+  imageUrls: string[];
 }
 
 export interface CadlensClientOptions {

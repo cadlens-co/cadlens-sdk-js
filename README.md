@@ -34,9 +34,10 @@ const result = await client.parseAndWait(
   'drawing.dwg',
 );
 
-console.log('Layers:', result.layersJson.length);
-console.log('Entities:', result.vectorJson.length);
-console.log('Preview:', result.imageUrl);
+console.log('Sheets:', result.sheets.length);
+console.log('Entities:', result.summary?.totalEntities);
+console.log('Layers:', result.summary?.totalLayers);
+console.log('Preview:', result.imageUrl ?? result.imageUrls?.[0]);
 ```
 
 ---
@@ -62,8 +63,11 @@ do {
 
 // 3. Result
 const result = await client.getResult(job_id);
-console.log(result.metadata);
-console.log(result.vectorJson.slice(0, 5));
+console.log(result.file);     // { name, format, version, units }
+console.log(result.summary);  // { totalSheets, totalEntities, totalLayers, truncated }
+for (const sheet of result.sheets) {
+  console.log(`${sheet.name}: ${sheet.entityCount} entities, ${sheet.layerCount} layers`);
+}
 ```
 
 ---
@@ -85,7 +89,7 @@ console.log(result.vectorJson.slice(0, 5));
 | `parseAndWait(file, fileName, options?)` | `JobResult` | Upload, poll, and return result |
 | `getJob(jobId)` | `Job` | Get job status and metadata |
 | `listJobs()` | `{ jobs: Job[] }` | List recent jobs (up to 100) |
-| `getResult(jobId)` | `JobResult` | Get vectorJson, layersJson, metadata |
+| `getResult(jobId)` | `JobResult` | Get `file`, `summary`, `sheets[]` (entities + layers per sheet) |
 | `getImage(jobId)` | `{ imageUrl: string }` | Get presigned PNG preview URL (1h TTL) |
 | `deleteJob(jobId)` | `void` | Delete job and S3 artifacts |
 

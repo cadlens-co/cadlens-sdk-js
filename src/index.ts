@@ -60,8 +60,8 @@ export class CadlensClient {
   }
 
   /**
-   * Fetch the full parsed result (vectorJson, layersJson, metadata).
-   * Only available when job status is COMPLETED.
+   * Fetch the full parsed result. Returns `file`, `summary`, and `sheets[]`
+   * (entities and layers grouped per sheet). Only available when job status is COMPLETED.
    */
   getResult(jobId: string): Promise<JobResult> {
     return this.request<JobResult>(`/v1/jobs/${jobId}/result`);
