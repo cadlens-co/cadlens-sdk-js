@@ -33,6 +33,8 @@ export interface DrawingMetadata {
   height: number;
   createdDate: string | null;
   layouts?: string[];
+  layoutLabels?: string[];
+  layoutKeys?: string[];
 }
 
 export interface BoundingBox {
@@ -61,6 +63,7 @@ export interface ResultSummary {
 
 export interface Sheet {
   name: string;
+  key: string;
   index: number;
   imageUrl: string | null;
   entityCount: number;
