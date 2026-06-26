@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.1] — 2026-06-26
+
+### Fixed
+- `getJobResult()` / `GET /v1/jobs/:id/result`: response is now returned promptly for
+  drawings with large entity counts (PDFs, complex DXF files). Previously the endpoint
+  timed out for sheets with thousands of entities, leaving `imageUrls` inaccessible.
+- PDF files now correctly populate `imageUrls` with one presigned URL per page. Previously
+  only a single entry was returned (or the request timed out entirely).
+
 ## [0.2.0] — 2026-06-25
 
 ### Added
