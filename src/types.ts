@@ -19,6 +19,21 @@ export interface VectorEntity {
   [key: string]: unknown;
 }
 
+/**
+ * One hatch pattern-definition line family (HATCH entities only).
+ * Values are in drawing units with the hatch's rotation and scale already applied.
+ */
+export interface HatchPatternLine {
+  /** Line angle in degrees, CCW from +X */
+  angle: number;
+  /** Base point of the first line */
+  base: { x: number; y: number };
+  /** Offset vector to the next parallel line */
+  offset: { x: number; y: number };
+  /** Dash/gap lengths (+ dash, − gap, 0 = dot); empty array = solid line */
+  dashes: number[];
+}
+
 export interface Layer {
   name: string;
   color: number;
@@ -35,6 +50,10 @@ export interface DrawingMetadata {
   layouts?: string[];
   layoutLabels?: string[];
   layoutKeys?: string[];
+  /** LTYPE table: linetype name → dash/gap array in drawing units (+ dash, − gap) */
+  linetypePatterns?: Record<string, number[]>;
+  /** DXF $LTSCALE global linetype scale factor */
+  ltscale?: number;
 }
 
 export interface BoundingBox {
