@@ -45,13 +45,20 @@ export class CadlensClient {
     form.append('file', file, fileName);
     if (options.webhookUrl) form.append('webhookUrl', options.webhookUrl);
     if (options.mode) form.append('mode', options.mode);
+    if (options.notifyEmail) form.append('notifyEmail', options.notifyEmail);
 
     return this.request<ParseResponse>('/v1/parse', { method: 'POST', body: form });
   }
 
-  /** Get the status and metadata for a job. */
-  getJob(jobId: string): Promise<Job> {
-    return this.request<Job>(`/v1/jobs/${jobId}`);
+  /**
+   * Get the status and metadata for a job.
+   * Pass `watch: true` from interactive poll loops — it marks the caller as a
+   * live viewer so CADLens suppresses the notifyEmail if the user watches the
+   * job finish.
+   */
+  getJob(jobId: string, options: { watch?: boolean } = {}): Promise<Job> {
+    const qs = options.watch ? '?watch=1' : '';
+    return this.request<Job>(`/v1/jobs/${jobId}${qs}`);
   }
 
   /** List up to 100 recent parse jobs for this API key. */

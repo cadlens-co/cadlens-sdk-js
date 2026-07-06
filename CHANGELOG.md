@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.4.0] — 2026-07-06
+
+### Added
+- `ParseOptions.notifyEmail`: optional email address on `parse()` — CADLens emails
+  a link to the job when it finishes, but only if the uploader stopped watching
+  (no email when the result was seen live).
+- `getJob(jobId, { watch: true })`: marks the poll as a live viewer so the
+  notifyEmail is suppressed when the user watches the job complete. Use it in
+  interactive poll loops; omit for unattended/server-side polling.
+- `WebhookPayload`, `WebhookResult`, `SheetSummary`, `WebhookEvent` types for
+  typing webhook receivers, including the new `result.resultUrl` field.
+
+### Changed (breaking for webhook consumers)
+- `job.completed` webhook payloads no longer include `sheets[].entities` /
+  `sheets[].layers` — sheets carry metadata only (name, key, counts, boundingBox,
+  area, perimeter, imageUrl). Fetch full geometry from `result.resultUrl`
+  (`GET /v1/jobs/:id/result`, unchanged) or `getResult()`. Payloads over 256 KB
+  omit `sheets` entirely. This fixes webhook delivery timeouts on large drawings.
+
 ## [0.3.0] — 2026-07-02
 
 ### Added

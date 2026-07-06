@@ -106,9 +106,47 @@ export interface JobResult {
   createdAt: string;
 }
 
+/** A Sheet without the raw geometry arrays — the shape used in webhook payloads. */
+export type SheetSummary = Omit<Sheet, 'entities' | 'layers'>;
+
+export type WebhookEvent = 'job.processing' | 'job.completed' | 'job.failed';
+
+/**
+ * `result` block of a `job.completed` webhook. Sheets carry metadata only
+ * (no entities/layers) — fetch full geometry from `resultUrl`
+ * (GET /v1/jobs/:id/result). Payloads over 256 KB omit `sheets` entirely.
+ */
+export interface WebhookResult {
+  imageUrl?: string;
+  imageUrls?: string[];
+  metadata?: DrawingMetadata;
+  file?: FileInfo;
+  summary?: ResultSummary;
+  sheets?: SheetSummary[];
+  /** URL of the full parse result (entities, layers) on the CADLens API. */
+  resultUrl?: string;
+}
+
+/** Body of a CADLens webhook POST. */
+export interface WebhookPayload {
+  eventId: string;
+  sequence: number;
+  event: WebhookEvent;
+  jobId: string;
+  status: string;
+  timestamp: string;
+  result?: WebhookResult;
+  error?: string;
+}
+
 export interface ParseOptions {
   webhookUrl?: string;
   mode?: 'async' | 'sync';
+  /**
+   * Email address to notify when a queued job finishes after the uploader
+   * stopped watching (max 320 chars).
+   */
+  notifyEmail?: string;
 }
 
 export interface ParseResponse {
