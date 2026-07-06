@@ -19,6 +19,11 @@
   (`GET /v1/jobs/:id/result`, unchanged) or `getResult()`. Payloads over 256 KB
   omit `sheets` entirely. This fixes webhook delivery timeouts on large drawings.
 
+### Notes (API v1.4.1, 2026-07-06)
+- API responses are now gzip-compressed via standard content negotiation
+  (`Accept-Encoding`). HTTP clients handle this automatically — no SDK code
+  change or upgrade required; large results simply download ~12× faster.
+
 ## [0.3.0] — 2026-07-02
 
 ### Added
