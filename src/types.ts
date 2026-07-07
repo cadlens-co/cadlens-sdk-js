@@ -54,6 +54,8 @@ export interface DrawingMetadata {
   linetypePatterns?: Record<string, number[]>;
   /** DXF $LTSCALE global linetype scale factor */
   ltscale?: number;
+  /** Count of 3D-only entity types (3DSOLID/BODY/SURFACE/REGION/MESH) with no extractable geometry. */
+  unsupported3DCount?: number;
 }
 
 export interface BoundingBox {

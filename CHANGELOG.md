@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.5.0] — 2026-07-07
+
+### Added
+- `DrawingMetadata.unsupported3DCount`: optional count of 3D-only entity types
+  (3DSOLID/BODY/SURFACE/REGION/MESH) with no extractable geometry.
+
+### Fixed (API behaviour, no type change)
+- `metadata.is3D` no longer reports `true` for drawings whose only 3D content
+  is unsupported entity types with an empty 3D scene.
+
 ## [0.4.0] — 2026-07-06
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "cadlens",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Official JavaScript/TypeScript SDK for the Cadlens CAD parsing API — DWG, DXF, and DWF to JSON and PNG previews.",
   "type": "module",
   "main": "./dist/index.js",
