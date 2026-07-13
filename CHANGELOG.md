@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.6.0] — 2026-07-13
+
+### Changed — BREAKING (API Schema v2.0.0)
+- `VectorEntity` restructured to the Schema v2 envelope. Flat coordinate fields
+  (`start`, `end`, `vertices`, `center`, `position`, `radius`, angles, scales)
+  moved into `entity.geometry` — read coordinates from `entity.geometry.*` now.
+  Each entity also carries `handle` (original CAD handle or `null` — never
+  derived from `id`), `category` (`Geometry` / `Annotation` / `BlockReference`
+  / `Hatch` / `Other`), `layout`, and always-present sibling objects:
+  `properties` (colorIndex/lineType/lineweight/visible + HATCH pattern fields),
+  `bbox` and `metrics` (computed helpers, 6-decimal, `null` when not
+  applicable), `text` (TEXT/MTEXT) and `reference` (INSERT `blockName`).
+  New types: `EntityCategory`, `EntityBbox`, `EntityMetrics`,
+  `EntityProperties`, `EntityText`, `EntityReference`.
+
+### Added
+- `JobResult.schemaVersion` / `JobResult.parserVersion` — contract and parser
+  engine versions ("2.0.0").
+- `JobResult.parseInfo` (`ParseInfo`): `{durationMs, warnings, errors}` —
+  `durationMs` is `null` for jobs parsed before Schema v2.
+- `ResultSummary.statistics` (`ResultStatistics`): entity counts `byType` and
+  `byCategory`.
+- `WebhookResult.schemaVersion` (additive — webhook sheets stay metadata-only).
+
 ## [0.5.0] — 2026-07-07
 
 ### Added

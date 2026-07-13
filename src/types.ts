@@ -11,12 +11,73 @@ export interface Job {
   imageUrl: string | null;
 }
 
+export type EntityCategory = 'Geometry' | 'Annotation' | 'BlockReference' | 'Hatch' | 'Other';
+
+/** Computed axis-aligned bounds (6-decimal). All values null when uncomputable (e.g. INSERT). */
+export interface EntityBbox {
+  minX: number | null;
+  minY: number | null;
+  maxX: number | null;
+  maxY: number | null;
+}
+
+/** Computed helper values (6-decimal, exact-only); null when not applicable. */
+export interface EntityMetrics {
+  length: number | null;
+  area: number | null;
+  perimeter: number | null;
+  vertexCount: number | null;
+}
+
+/** Display properties. HATCH pattern fields are null on non-HATCH types. */
+export interface EntityProperties {
+  /** ACI color; null = BYLAYER */
+  colorIndex: number | null;
+  /** Entity override; null = BYLAYER */
+  lineType: string | null;
+  /** 100ths of mm; -3 BYBLOCK, -2 BYLAYER, -1 default */
+  lineweight: number | null;
+  /** From the entity layer's isVisible flag */
+  visible: boolean;
+  solid: boolean | null;
+  patternName: string | null;
+  patternAngle: number | null;
+  patternScale: number | null;
+}
+
+/** TEXT/MTEXT content — null on other entity types. */
+export interface EntityText {
+  value: string;
+  height: number;
+  style: string | null;
+}
+
+/** INSERT block reference — null on other entity types. */
+export interface EntityReference {
+  blockName: string;
+}
+
+/**
+ * Schema v2 entity envelope. `geometry` holds spatial data only (per-type
+ * fields, original precision — e.g. LINE: start/end; LWPOLYLINE: vertices/
+ * closed/filled; ARC: center/radius/startAngle/endAngle in radians).
+ * `metrics` and `bbox` are always present with nulls when not applicable.
+ */
 export interface VectorEntity {
+  /** Stable identifier — CAD handle when available, otherwise a synthetic UUID. */
+  id: string;
+  /** Original CAD handle (DXF group code 5) or null — never derived from `id`. */
+  handle: string | null;
   type: string;
+  category: EntityCategory;
   layer: string;
-  color: number;
-  lineweight: number;
-  [key: string]: unknown;
+  layout: string | null;
+  geometry: Record<string, unknown>;
+  text: EntityText | null;
+  reference: EntityReference | null;
+  properties: EntityProperties;
+  bbox: EntityBbox;
+  metrics: EntityMetrics;
 }
 
 /**
@@ -74,12 +135,26 @@ export interface FileInfo {
   units: string;
 }
 
+/** Entity counts grouped by type and by category. */
+export interface ResultStatistics {
+  byType: Record<string, number>;
+  byCategory: Record<string, number>;
+}
+
 export interface ResultSummary {
   totalSheets: number;
   totalEntities: number;
   totalLayers: number;
+  statistics?: ResultStatistics;
   boundingBox?: BoundingBox;
   truncated: boolean;
+}
+
+/** Parse diagnostics. `durationMs` is null for jobs parsed before Schema v2. */
+export interface ParseInfo {
+  durationMs: number | null;
+  warnings: string[];
+  errors: string[];
 }
 
 export interface Sheet {
@@ -97,12 +172,17 @@ export interface Sheet {
 }
 
 export interface JobResult {
+  /** Semver of the JSON contract (Schema v2 = "2.0.0"). */
+  schemaVersion?: string;
+  /** CAD parser engine version, independent of application releases. */
+  parserVersion?: string;
   jobId: string;
   status: JobStatus;
   file?: FileInfo;
   summary?: ResultSummary;
   sheets: Sheet[];
   metadata: DrawingMetadata;
+  parseInfo?: ParseInfo;
   imageUrl?: string | null;
   imageUrls?: string[];
   createdAt: string;
@@ -119,6 +199,8 @@ export type WebhookEvent = 'job.processing' | 'job.completed' | 'job.failed';
  * (GET /v1/jobs/:id/result). Payloads over 256 KB omit `sheets` entirely.
  */
 export interface WebhookResult {
+  /** Semver of the result JSON contract (Schema v2 = "2.0.0"). */
+  schemaVersion?: string;
   imageUrl?: string;
   imageUrls?: string[];
   metadata?: DrawingMetadata;
