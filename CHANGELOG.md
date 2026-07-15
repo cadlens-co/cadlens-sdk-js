@@ -1,5 +1,32 @@
 # Changelog
 
+## API service — 2026-07-16 (no SDK changes required)
+
+- Large-file parses are ~3x faster: redundant conversion retries that could
+  not change the outcome are skipped and the streaming geometry filter
+  fast-forwards over out-of-budget sections. Results are identical (same
+  entities, layers, `truncated` flag). Conversion time limits for very
+  complex drawings are also higher and configurable server-side. No
+  request/response shape changes.
+
+## API service — 2026-07-15 (no SDK changes required)
+
+- `mode=sync` uploads now auto-divert to async when the file is large or its
+  converted geometry turns out huge: the API returns `202` immediately with a
+  human-readable `message` instead of holding the connection until the sync
+  wait times out. Poll `GET /v1/jobs/:jobId` or use webhooks as usual.
+- Oversized drawings that previously failed with `FILE_TOO_COMPLEX` are now
+  parsed with a bounded streaming pre-filter and return `truncated: true` in
+  the result summary. No request/response shape changes.
+
+## API service — 2026-07-14 (no SDK changes required)
+
+- Large-file reliability fix on the API: drawings whose converted geometry
+  exceeds processing limits now fail fast with status `FAILED` and a clear
+  error message (previously they could remain `PROCESSING` indefinitely after
+  a server interruption). Failure emails and `job.failed` webhooks now fire
+  for every terminal outcome. No request/response shape changes.
+
 ## [0.6.0] — 2026-07-13
 
 ### Changed — BREAKING (API Schema v2.0.0)
