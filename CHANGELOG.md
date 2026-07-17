@@ -1,5 +1,14 @@
 # Changelog
 
+## API service — 2026-07-17 (no SDK changes required)
+
+- Parser 2.2.1: drawings with ACIS 3DSOLID geometry no longer drop circular
+  edges (mounting-plate holes, cable-gland openings, bolt circles) from the
+  extracted wireframe — a record-layout mis-alignment skipped exactly those
+  circles and could inflate drawing extents with mis-read arcs. All solid
+  edges are now extracted; results report `parserVersion: "2.2.1"`. No
+  request/response shape changes; 2D drawings are unaffected.
+
 ## API service — 2026-07-16 (no SDK changes required)
 
 - Large-file parses are ~3x faster: redundant conversion retries that could
